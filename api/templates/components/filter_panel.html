@@ -1,0 +1,44 @@
+<!-- filter_panel.html — Panel de filtros (datos reales: género + edad) -->
+<form id="filter-form"
+      hx-get="/analysis/data"
+      hx-target="#dashboard-content"
+      hx-swap="innerHTML"
+      hx-trigger="submit, change delay:200ms"
+      x-data="filterPanel()"
+      class="bg-white rounded-xl shadow-sm p-4 space-y-3">
+  <h3 class="text-sm font-semibold text-primary">Filtros</h3>
+
+  <div>
+    <label class="block text-xs font-medium text-gray-600 mb-1">Género</label>
+    <select name="gender" class="w-full text-sm border border-gray-300 rounded-lg px-2 py-1.5 focus:ring-2 focus:ring-primary outline-none">
+      <option value="">Todos</option>
+      {% for opt in filter_options.genders %}
+      <option value="{{ opt }}" {% if current_filters.get('respondent_gender') == opt %}selected{% endif %}>{{ opt }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-xs font-medium text-gray-600 mb-1">Rango de edad</label>
+    <select name="age_range" class="w-full text-sm border border-gray-300 rounded-lg px-2 py-1.5 focus:ring-2 focus:ring-primary outline-none">
+      <option value="">Todos</option>
+      {% for opt in filter_options.age_ranges %}
+      <option value="{{ opt }}" {% if current_filters.get('respondent_age_range') == opt %}selected{% endif %}>{{ opt }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="pt-2 border-t border-gray-100">
+    <label class="block text-xs font-medium text-gray-600 mb-1">Competencia (distribución)</label>
+    <select name="competency_code" class="w-full text-sm border border-gray-300 rounded-lg px-2 py-1.5 focus:ring-2 focus:ring-primary outline-none">
+      {% for code in competency_codes %}
+      <option value="{{ code }}" {% if code == selected_code %}selected{% endif %}>{{ code }} · {{ competency_names[code] }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="flex gap-2 pt-2">
+    <button type="submit" class="flex-1 bg-primary hover:bg-blue-900 text-white text-sm py-2 rounded-lg transition">Aplicar</button>
+    <button type="button" @click="clear()" class="px-3 bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm py-2 rounded-lg transition">Limpiar</button>
+  </div>
+</form>

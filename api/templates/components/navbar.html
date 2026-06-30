@@ -1,0 +1,59 @@
+<!-- navbar.html — Barra de navegación UTPL -->
+<nav class="bg-primary text-white shadow-md" x-data="{ open: false }">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="flex items-center justify-between h-16">
+      <!-- Marca -->
+      <a href="/dashboard" class="flex items-center gap-3">
+        <span class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-white text-primary font-bold">U</span>
+        <span class="font-semibold leading-tight text-sm sm:text-base">
+          Evaluación de Competencias Digitales
+          <span class="hidden sm:block text-xs font-normal text-blue-100">DigComp 2.2 · UTPL</span>
+        </span>
+      </a>
+
+      <!-- Acciones (escritorio) -->
+      <div class="hidden md:flex items-center gap-4">
+        {% if current_user_id %}
+          <a href="/dashboard" class="hover:text-secondary transition text-sm">Dashboard</a>
+          {% if 'cargar_csv' in current_permisos %}
+          <a href="/admin/encuestas" class="hover:text-secondary transition text-sm">Encuestas</a>
+          {% endif %}
+          {% if 'gestionar_usuarios' in current_permisos %}
+          <a href="/admin/usuarios" class="hover:text-secondary transition text-sm">Usuarios</a>
+          {% endif %}
+          <div class="text-right leading-tight">
+            <div class="text-sm font-medium">{{ current_user_name }}</div>
+            <div class="text-xs text-blue-100">{{ current_user_role }}</div>
+          </div>
+          <a href="/logout" class="bg-secondary hover:bg-orange-600 transition px-4 py-2 rounded-lg text-sm font-medium">Cerrar sesión</a>
+        {% else %}
+          <a href="/login" class="bg-secondary hover:bg-orange-600 transition px-4 py-2 rounded-lg text-sm font-medium">Iniciar sesión</a>
+        {% endif %}
+      </div>
+
+      <!-- Botón móvil -->
+      <button @click="open = !open" class="md:hidden p-2 rounded hover:bg-blue-900" aria-label="Menú">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Menú móvil -->
+  <div x-show="open" x-cloak class="md:hidden border-t border-blue-900 px-4 py-3 space-y-2">
+    {% if current_user_id %}
+      <div class="text-sm font-medium">{{ current_user_name }} <span class="text-xs text-blue-100">({{ current_user_role }})</span></div>
+      <a href="/dashboard" class="block py-1 text-sm">Dashboard</a>
+      {% if 'cargar_csv' in current_permisos %}
+      <a href="/admin/encuestas" class="block py-1 text-sm">Encuestas</a>
+      {% endif %}
+      {% if 'gestionar_usuarios' in current_permisos %}
+      <a href="/admin/usuarios" class="block py-1 text-sm">Usuarios</a>
+      {% endif %}
+      <a href="/logout" class="block bg-secondary px-4 py-2 rounded-lg text-sm text-center">Cerrar sesión</a>
+    {% else %}
+      <a href="/login" class="block bg-secondary px-4 py-2 rounded-lg text-sm text-center">Iniciar sesión</a>
+    {% endif %}
+  </div>
+</nav>

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Iniciar sesión · UTPL DigComp{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center px-4 py-10">
+  <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
+    <div class="text-center mb-6">
+      <div class="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-primary text-white text-2xl font-bold mb-3">U</div>
+      <h1 class="text-2xl font-bold text-primary">Iniciar sesión</h1>
+      <p class="text-sm text-gray-500 mt-1">Evaluación de Competencias Digitales</p>
+    </div>
+
+    <form method="post" action="/login" class="space-y-4" x-data="{ show: false }">
+      <!-- Email -->
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </span>
+          <input id="email" name="email" type="email" required autocomplete="email"
+                 placeholder="tucorreo@utpl.edu.ec"
+                 class="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+        </div>
+      </div>
+
+      <!-- Contraseña -->
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          </span>
+          <input id="password" name="password" required autocomplete="current-password"
+                 :type="show ? 'text' : 'password'" placeholder="••••••••"
+                 class="w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+          <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-primary" aria-label="Mostrar/ocultar">
+            <svg x-show="!show" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.46 12C3.73 7.94 7.52 5 12 5s8.27 2.94 9.54 7c-1.27 4.06-5.06 7-9.54 7s-8.27-2.94-9.54-7z"/></svg>
+            <svg x-show="show" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.48 0-8.27-2.94-9.54-7a9.97 9.97 0 011.563-3.029M9.88 9.88a3 3 0 104.24 4.24M6.7 6.7A9.95 9.95 0 0112 5c4.48 0 8.27 2.94 9.54 7a9.96 9.96 0 01-4.24 5.06M3 3l18 18"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit"
+              class="w-full bg-primary hover:bg-blue-900 text-white font-medium py-2.5 rounded-lg transition">
+        Iniciar sesión
+      </button>
+    </form>
+
+    <p class="mt-6 text-center text-xs text-gray-400">
+      Acceso restringido. Si necesitas una cuenta, contacta al administrador.
+    </p>
+  </div>
+</div>
+{% endblock %}

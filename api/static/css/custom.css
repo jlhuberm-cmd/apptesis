@@ -1,0 +1,54 @@
+/* ============================================================
+   custom.css — Estilos personalizados UTPL
+   Complementa Tailwind (CDN) con estilos específicos.
+   ============================================================ */
+
+:root {
+  --utpl-azul: #003B71;
+  --utpl-naranja: #F39C12;
+  --utpl-verde: #27AE60;
+  --utpl-rojo: #E74C3C;
+}
+
+/* Oculta elementos con x-cloak hasta que Alpine se inicializa. */
+[x-cloak] { display: none !important; }
+
+/* ---- Inputs de código OTP (6 dígitos) ---- */
+.otp-input {
+  width: 3rem;
+  height: 3.5rem;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--utpl-azul);
+  border: 2px solid #d1d5db;
+  border-radius: 0.6rem;
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.otp-input:focus {
+  border-color: var(--utpl-azul);
+  box-shadow: 0 0 0 3px rgba(0, 59, 113, .15);
+}
+@media (max-width: 380px) {
+  .otp-input { width: 2.5rem; height: 3rem; font-size: 1.25rem; }
+}
+
+/* ---- Indicador de carga HTMX ---- */
+.htmx-indicator { opacity: 0; transition: opacity .2s ease; pointer-events: none; }
+.htmx-request .htmx-indicator,
+.htmx-request.htmx-indicator { opacity: 1; pointer-events: auto; }
+
+/* ---- Animación de aparición para alertas ---- */
+@keyframes utpl-slide-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+[role="alert"] { animation: utpl-slide-in .25s ease-out; }
+
+/* ---- Foco accesible consistente ---- */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--utpl-naranja);
+  outline-offset: 2px;
+}

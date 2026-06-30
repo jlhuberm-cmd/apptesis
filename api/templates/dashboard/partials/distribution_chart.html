@@ -1,0 +1,18 @@
+<!-- distribution_chart.html — Partial: distribución de una competencia -->
+<div class="bg-white rounded-xl shadow-sm p-4">
+  <h3 class="text-sm font-semibold text-primary mb-2">
+    Distribución · {{ dist.competency_code }} {{ dist.competency_name }}
+  </h3>
+  <div id="distribution-chart" class="w-full h-72"></div>
+</div>
+<script>
+  (function () {
+    initDistributionChart(
+      'distribution-chart',
+      {{ dist.bins | tojson }},
+      {{ dist.frequencies | tojson }},
+      {{ dist.mean_line | tojson }},
+      {{ dist.competency_name | tojson }}
+    );
+  })();
+</script>

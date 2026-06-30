@@ -1,0 +1,10 @@
+<!-- radar_chart.html — Partial: gráfico radar (4 vértices) -->
+<div class="bg-white rounded-xl shadow-sm p-4">
+  <h3 class="text-sm font-semibold text-primary mb-2">Perfil de competencias (radar)</h3>
+  <div id="radar-chart" class="w-full h-72"></div>
+</div>
+<script>
+  (function () {
+    initRadarChart('radar-chart', {{ radar.labels | tojson }}, {{ radar.values | tojson }}, {{ radar.max_value | tojson }});
+  })();
+</script>

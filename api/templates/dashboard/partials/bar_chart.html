@@ -1,0 +1,10 @@
+<!-- bar_chart.html — Partial: gráfico de barras (media por competencia) -->
+<div class="bg-white rounded-xl shadow-sm p-4">
+  <h3 class="text-sm font-semibold text-primary mb-2">Media por competencia</h3>
+  <div id="bar-chart" class="w-full h-72"></div>
+</div>
+<script>
+  (function () {
+    initBarChart('bar-chart', {{ bar.labels | tojson }}, {{ bar.values | tojson }}, {{ bar.colors | tojson }}, {{ (max_score if max_score is defined else 8) | tojson }});
+  })();
+</script>

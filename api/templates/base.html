@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}UTPL · Evaluación DigComp 2.2{% endblock %}</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary:   '#003B71',  /* Azul UTPL */
+            secondary: '#F39C12',  /* Naranja */
+            success:   '#27AE60',  /* Verde */
+            danger:    '#E74C3C',  /* Rojo */
+          },
+          fontFamily: { sans: ['Segoe UI', 'Arial', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+
+  <!-- HTMX -->
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" charset="utf-8"></script>
+
+  <!-- Scripts propios: se cargan en <head> para que las funciones de gráficos
+       estén definidas antes de los scripts inline de los partials del dashboard. -->
+  <script src="/static/js/htmx-config.js"></script>
+  <script src="/static/js/alpine-components.js"></script>
+  <script src="/static/js/charts.js"></script>
+
+  <link rel="stylesheet" href="/static/css/custom.css">
+</head>
+<body class="min-h-screen bg-[#F5F6FA] text-gray-800 flex flex-col" hx-indicator="#global-loading">
+
+  {% include "components/navbar.html" %}
+
+  <!-- Mensajes flash -->
+  {% if flashes %}
+  <div class="max-w-3xl mx-auto w-full px-4 mt-4 space-y-2">
+    {% for alert in flashes %}
+      {% include "components/alert.html" %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <main class="flex-1 w-full">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% include "components/footer.html" %}
+  {% include "components/loading.html" %}
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

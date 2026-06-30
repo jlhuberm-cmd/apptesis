@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Gestión de encuestas · Admin{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 py-6">
+  <div class="flex items-center justify-between mb-5">
+    <div>
+      <h1 class="text-2xl font-bold text-primary">Gestión de encuestas</h1>
+      <p class="text-sm text-gray-500">{{ total_respuestas }} respuestas (encuestados) en total</p>
+    </div>
+    <a href="/admin/logout" class="text-sm text-gray-500 hover:underline">Cerrar sesión</a>
+  </div>
+
+  <!-- Subir nueva encuesta -->
+  <div class="bg-white rounded-2xl shadow-sm p-6 mb-5">
+    <h2 class="text-lg font-semibold text-primary mb-1">Subir nueva encuesta (CSV)</h2>
+    <p class="text-sm text-gray-500 mb-4">Archivo CSV exportado de ArcGIS Survey123 (formato DigComp 2.2, escala 0–3).</p>
+    <form method="post" action="/admin/encuestas/upload" enctype="multipart/form-data"
+          x-data="{ name: '', drag: false }" class="space-y-4">
+      <label @dragover.prevent="drag = true" @dragleave.prevent="drag = false"
+             @drop.prevent="drag = false; name = $event.dataTransfer.files[0]?.name; $refs.file.files = $event.dataTransfer.files"
+             :class="drag ? 'border-primary bg-blue-50' : 'border-gray-300'"
+             class="flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-8 cursor-pointer transition">
+        <svg class="w-10 h-10 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.9A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+        <p class="text-sm text-gray-600">Arrastra el CSV aquí o <span class="text-primary font-medium">haz clic para seleccionar</span></p>
+        <p class="text-xs text-gray-400 mt-1" x-text="name || 'Solo archivos .csv'"></p>
+        <input x-ref="file" type="file" name="file" accept=".csv" required class="hidden" @change="name = $event.target.files[0]?.name">
+      </label>
+      <button type="submit" class="w-full bg-primary hover:bg-blue-900 text-white font-medium py-2.5 rounded-lg transition">
+        Cargar y procesar
+      </button>
+    </form>
+  </div>
+
+  <!-- Encuestas cargadas + borrado -->
+  <div class="bg-white rounded-2xl shadow-sm p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-lg font-semibold text-primary">Encuestas cargadas</h2>
+      {% if encuestas %}
+      <div x-data="{ confirm: false }">
+        <button @click="confirm = true" x-show="!confirm"
+                class="bg-danger hover:bg-red-700 text-white text-sm px-4 py-2 rounded-lg transition">
+          Borrar todos los datos
+        </button>
+        <form method="post" action="/admin/encuestas/delete-all" class="inline-flex items-center gap-2" x-show="confirm" x-cloak>
+          <span class="text-sm text-danger">¿Seguro? Esto elimina TODO.</span>
+          <button type="submit" class="bg-danger hover:bg-red-700 text-white text-sm px-3 py-2 rounded-lg">Sí, borrar</button>
+          <button type="button" @click="confirm = false" class="text-sm text-gray-500 px-2">Cancelar</button>
+        </form>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead>
+          <tr class="text-xs uppercase text-gray-500 bg-gray-50 border-b text-left">
+            <th class="px-4 py-2">Nombre</th>
+            <th class="px-4 py-2">Archivo</th>
+            <th class="px-4 py-2 text-right">Respuestas</th>
+            <th class="px-4 py-2">Estado</th>
+            <th class="px-4 py-2">Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for e in encuestas %}
+          <tr class="border-b last:border-0 hover:bg-blue-50/40">
+            <td class="px-4 py-2 font-medium text-gray-700">{{ e.nombre }}</td>
+            <td class="px-4 py-2 text-gray-500">{{ e.archivo_origen or '—' }}</td>
+            <td class="px-4 py-2 text-right">{{ e.total_respuestas }}</td>
+            <td class="px-4 py-2">
+              <span class="text-xs px-2 py-0.5 rounded-full
+                {% if e.estado == 'completado' %}bg-green-50 text-success{% elif e.estado == 'error' %}bg-red-50 text-danger{% else %}bg-orange-50 text-secondary{% endif %}">
+                {{ e.estado }}
+              </span>
+            </td>
+            <td class="px-4 py-2 text-gray-500">{{ e.created_at[:10] if e.created_at else '—' }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="5" class="px-4 py-8 text-center text-gray-400">No hay encuestas cargadas todavía.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+<!-- dashboard_content.html — Contenido del dashboard (intercambiable por HTMX) -->
+<!-- Tarjetas resumen por competencia -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+  {% for card in cards %}
+  <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-{{ card.color }}">
+    <p class="text-xs text-gray-500">{{ card.code }}</p>
+    <p class="text-xs text-gray-600 leading-tight h-8 overflow-hidden">{{ card.name }}</p>
+    <p class="text-2xl font-bold text-{{ card.color }} mt-1">{{ "%.2f"|format(card.mean) }}<span class="text-xs font-normal text-gray-400"> / 3</span></p>
+    <span class="inline-block text-[11px] mt-1 px-2 py-0.5 rounded-full bg-{{ card.color }}/10 text-{{ card.color }}">
+      {{ card.category }}
+    </span>
+    {% if card.conoc is defined %}
+    <p class="text-[11px] text-gray-500 mt-1.5">Conocimiento: <span class="font-medium">{{ "%.2f"|format(card.conoc) }}</span> / 3</p>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Gráficos radar + barras -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+  {% include "dashboard/partials/radar_chart.html" %}
+  {% include "dashboard/partials/bar_chart.html" %}
+</div>
+
+<!-- Distribución -->
+<div class="mb-4">
+  {% include "dashboard/partials/distribution_chart.html" %}
+</div>
+
+<!-- Tabla de estadísticas -->
+{% include "dashboard/partials/statistics_table.html" %}

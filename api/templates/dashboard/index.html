@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · UTPL DigComp{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-6">
+  <!-- Encabezado -->
+  <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+    <div>
+      <h1 class="text-2xl font-bold text-primary">Tablero de Competencias Digitales</h1>
+      <p class="text-sm text-gray-500">
+        DigComp 2.2 · Área 4 (Seguridad)
+        {% if has_data %}· <span class="font-medium">{{ sample_size }}</span> respuestas{% endif %}
+      </p>
+    </div>
+    <div class="flex gap-2">
+      {% if 'cargar_csv' in current_permisos %}
+      <a href="/admin/encuestas" class="bg-secondary hover:bg-orange-600 text-white text-sm px-4 py-2 rounded-lg transition">Encuestas</a>
+      {% endif %}
+      {% if 'gestionar_usuarios' in current_permisos %}
+      <a href="/admin/usuarios" class="bg-white border border-gray-300 hover:bg-gray-50 text-primary text-sm px-4 py-2 rounded-lg transition">Usuarios</a>
+      {% endif %}
+      <a href="/logout" class="bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm px-4 py-2 rounded-lg transition">Cerrar sesión</a>
+    </div>
+  </div>
+
+  {% if has_data %}
+  <div class="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-4">
+    <!-- Panel de filtros (persistente) -->
+    <aside>
+      {% include "components/filter_panel.html" %}
+    </aside>
+
+    <!-- Contenido intercambiable por HTMX -->
+    <section id="dashboard-content">
+      {% include "dashboard/partials/dashboard_content.html" %}
+    </section>
+  </div>
+  {% else %}
+  {% include "dashboard/empty_state.html" %}
+  {% endif %}
+</div>
+{% endblock %}
