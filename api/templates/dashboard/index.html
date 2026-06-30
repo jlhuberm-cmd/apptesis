@@ -13,6 +13,32 @@
       </p>
     </div>
     <div class="flex gap-2">
+      {% if has_data %}
+      <!-- Exportar: disponible para todos los usuarios con acceso al dashboard -->
+      <div class="relative" x-data="{ openExport: false }">
+        <button @click="openExport = !openExport" type="button"
+                class="inline-flex items-center gap-1.5 bg-success hover:bg-green-700 text-white text-sm px-4 py-2 rounded-lg transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/>
+          </svg>
+          Exportar
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div x-show="openExport" @click.outside="openExport = false" x-cloak
+             class="absolute right-0 mt-1 w-52 bg-white rounded-lg shadow-lg border border-gray-200 z-20 overflow-hidden">
+          <button type="button" @click="exportDashboard('excel'); openExport = false"
+                  class="flex items-center gap-2 w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition">
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-green-100 text-green-700 text-xs font-bold">X</span>
+            Excel (.xlsx)
+          </button>
+          <button type="button" @click="exportDashboard('pdf'); openExport = false"
+                  class="flex items-center gap-2 w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition border-t border-gray-100">
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-red-100 text-red-700 text-xs font-bold">P</span>
+            PDF (.pdf)
+          </button>
+        </div>
+      </div>
+      {% endif %}
       {% if 'cargar_csv' in current_permisos %}
       <a href="/admin/encuestas" class="bg-secondary hover:bg-orange-600 text-white text-sm px-4 py-2 rounded-lg transition">Encuestas</a>
       {% endif %}
@@ -39,4 +65,58 @@
   {% include "dashboard/empty_state.html" %}
   {% endif %}
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Captura un grafico Plotly renderizado como PNG (data URL). Devuelve '' si el
+  // grafico aun no existe o falla la captura.
+  async function _capturarGrafico(elementId) {
+    const el = document.getElementById(elementId);
+    if (!el || !window.Plotly || !el.classList.contains('js-plotly-plot')) return '';
+    try {
+      return await Plotly.toImage(el, { format: 'png', width: 800, height: 450, scale: 2 });
+    } catch (e) {
+      console.warn('No se pudo capturar el grafico', elementId, e);
+      return '';
+    }
+  }
+
+  // Exporta el tablero a Excel o PDF. Lee los filtros ACTUALES del formulario y
+  // captura los graficos que esten renderizados en ese momento, de modo que el
+  // archivo refleje exactamente lo que se ve en pantalla. Envia por POST porque
+  // las imagenes (base64) no caben en una URL GET.
+  async function exportDashboard(formato) {
+    const form = document.getElementById('filter-form');
+    const filtros = { gender: '', age_range: '', competency_code: '' };
+    if (form) {
+      const g = form.querySelector('[name=gender]');
+      const a = form.querySelector('[name=age_range]');
+      const c = form.querySelector('[name=competency_code]');
+      if (g) filtros.gender = g.value || '';
+      if (a) filtros.age_range = a.value || '';
+      if (c) filtros.competency_code = c.value || '';
+    }
+
+    const radar_img = await _capturarGrafico('radar-chart');
+    const bar_img = await _capturarGrafico('bar-chart');
+    const dist_img = await _capturarGrafico('distribution-chart');
+
+    const post = document.createElement('form');
+    post.method = 'POST';
+    post.action = '/dashboard/export/' + formato;
+    post.style.display = 'none';
+    const campos = Object.assign({}, filtros, { radar_img, bar_img, dist_img });
+    for (const [name, value] of Object.entries(campos)) {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      input.value = value;
+      post.appendChild(input);
+    }
+    document.body.appendChild(post);
+    post.submit();
+    post.remove();
+  }
+</script>
 {% endblock %}

@@ -19,6 +19,7 @@ from api.routes import (
     analysis_routes,
     auth_routes,
     dashboard_routes,
+    export_routes,
     health_routes,
 )
 from config.settings import get_settings
@@ -56,6 +57,7 @@ def create_app() -> FastAPI:
     app.include_router(auth_routes.router)
     app.include_router(dashboard_routes.router)
     app.include_router(analysis_routes.router)
+    app.include_router(export_routes.router)
     app.include_router(admin_routes.router)
 
     # Manejo global de errores.
