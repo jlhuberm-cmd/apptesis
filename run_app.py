@@ -17,6 +17,10 @@ import main  # noqa: E402
 
 if __name__ == "__main__":
     import uvicorn
-    host = os.environ.get("HOST", "127.0.0.1")
+    # En plataformas como Render la variable PORT viene definida por el entorno y
+    # el servidor debe escuchar en 0.0.0.0 para ser accesible desde fuera. En local
+    # (sin PORT) se mantiene 127.0.0.1 salvo que se indique HOST explicitamente.
+    default_host = "0.0.0.0" if os.environ.get("PORT") else "127.0.0.1"
+    host = os.environ.get("HOST", default_host)
     port = int(os.environ.get("PORT", 8012))
     uvicorn.run(main.app, host=host, port=port, log_level="info")
