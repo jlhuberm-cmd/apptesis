@@ -2,7 +2,7 @@
 
 Lee un CSV de ArcGIS Survey123 y lo escribe en las tablas normalizadas:
     encuestas → respuestas_encuesta → detalle_respuestas → resultados_competencia
-calculando los scores con `digcomp_scoring` (escala Likert 0–3).
+calculando los scores con `digcomp_scoring` (escala Likert 1–4).
 
 También permite borrar TODAS las encuestas (cascade elimina respuestas, detalle y
 resultados, conservando el catálogo competencias/preguntas/respuestas_correctas).

@@ -1,4 +1,4 @@
-"""Rutas del dashboard principal con gráficos (datos reales, escala 0–3).
+"""Rutas del dashboard principal con gráficos (datos reales, escala 1–4).
 
 Lee los resultados reales desde SupabaseDashboardService (vista
 v_dashboard_resultados) y muestra tarjetas, gráficos y la tabla de estadísticas.

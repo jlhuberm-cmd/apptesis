@@ -5,6 +5,6 @@
 </div>
 <script>
   (function () {
-    initBarChart('bar-chart', {{ bar.labels | tojson }}, {{ bar.values | tojson }}, {{ bar.colors | tojson }}, {{ (max_score if max_score is defined else 8) | tojson }});
+    initBarChart('bar-chart', {{ bar.labels | tojson }}, {{ bar.values | tojson }}, {{ bar.colors | tojson }}, {{ (max_score if max_score is defined else 4) | tojson }});
   })();
 </script>

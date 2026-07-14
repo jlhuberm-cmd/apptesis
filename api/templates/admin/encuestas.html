@@ -14,7 +14,7 @@
   <!-- Subir nueva encuesta -->
   <div class="bg-white rounded-2xl shadow-sm p-6 mb-5">
     <h2 class="text-lg font-semibold text-primary mb-1">Subir nueva encuesta (CSV)</h2>
-    <p class="text-sm text-gray-500 mb-4">Archivo CSV exportado de ArcGIS Survey123 (formato DigComp 2.2, escala 0–3).</p>
+    <p class="text-sm text-gray-500 mb-4">Archivo CSV exportado de ArcGIS Survey123 (formato DigComp 2.2, escala 1–4).</p>
     <form method="post" action="/admin/encuestas/upload" enctype="multipart/form-data"
           x-data="{ name: '', drag: false }" class="space-y-4">
       <label @dragover.prevent="drag = true" @dragleave.prevent="drag = false"

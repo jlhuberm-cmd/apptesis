@@ -1,19 +1,19 @@
-"""Motor de cálculo DigComp 2.2 (escala Likert 0–3) — funciones puras.
+"""Motor de cálculo DigComp 2.2 (escala Likert 1–4) — funciones puras.
 
 Replica EXACTAMENTE la lógica del esquema real del usuario:
 
-- Likert (texto → valor 0–3):
-    "No sé cómo hacerlo"            → 0  (Básico)
-    "Puedo hacerlo con ayuda"       → 1  (Intermedio)
-    "Puedo hacerlo por mi cuenta"   → 2  (Avanzado)
-    "Puedo hacerlo y ayudo a otros" → 3  (Experto)
+- Likert (texto → valor 1–4):
+    "No sé cómo hacerlo"            → 1  (Básico)
+    "Puedo hacerlo con ayuda"       → 2  (Intermedio)
+    "Puedo hacerlo por mi cuenta"   → 3  (Avanzado)
+    "Puedo hacerlo y ayudo a otros" → 4  (Experto)
 
 - score_autoevaluacion = promedio de los valores Likert de la competencia.
-- score_conocimiento   = (nº respuestas correctas / nº preguntas de validación) × 3.
+- score_conocimiento   = 1 + (nº respuestas correctas / nº preguntas de validación) × 3.
     Una respuesta de validación es correcta si (en minúsculas) empieza por
     "<letra_correcta>." (p. ej. "c. ...").
 - nivel (sobre score_autoevaluacion):
-    0.00–0.99 → Básico · 1.00–1.99 → Intermedio · 2.00–2.74 → Avanzado · 2.75–3.00 → Experto
+    1.00–1.99 → Básico · 2.00–2.99 → Intermedio · 3.00–3.74 → Avanzado · 3.75–4.00 → Experto
 
 No depende de infraestructura: solo recibe la fila del CSV y el catálogo de preguntas.
 """
@@ -36,17 +36,17 @@ def _norm(text: object) -> str:
     return s.strip().lower()
 
 
-# Mapa Likert normalizado → valor 0–3.
+# Mapa Likert normalizado → valor 1–4.
 _LIKERT_MAP = {
-    _norm("No sé cómo hacerlo"): 0,
-    _norm("Puedo hacerlo con ayuda"): 1,
-    _norm("Puedo hacerlo por mi cuenta"): 2,
-    _norm("Puedo hacerlo y ayudo a otros"): 3,
+    _norm("No sé cómo hacerlo"): 1,
+    _norm("Puedo hacerlo con ayuda"): 2,
+    _norm("Puedo hacerlo por mi cuenta"): 3,
+    _norm("Puedo hacerlo y ayudo a otros"): 4,
 }
 
 
 def likert_value(text: object) -> int | None:
-    """Convierte el texto Likert a 0–3; None si está vacío o no reconocido."""
+    """Convierte el texto Likert a 1–4; None si está vacío o no reconocido."""
     key = _norm(text)
     if not key:
         return None
@@ -61,14 +61,14 @@ def is_correct(answer: object, letra_correcta: str | None) -> bool:
 
 
 def nivel_for_score(score: float | None) -> str | None:
-    """Clasifica un score de autoevaluación (0–3) en el nivel DigComp."""
+    """Clasifica un score de autoevaluación (1–4) en el nivel DigComp."""
     if score is None:
         return None
-    if score < 1.0:
-        return "Básico"
     if score < 2.0:
+        return "Básico"
+    if score < 3.0:
         return "Intermedio"
-    if score < 2.75:
+    if score < 3.75:
         return "Avanzado"
     return "Experto"
 
@@ -149,7 +149,7 @@ def score_row(
     for id_comp, data in por_comp.items():
         auto = round(_mean(data["likert"]), 2) if data["likert"] else None
         conoc = (
-            round((data["valid_ok"] / data["valid_total"]) * 3, 2)
+            round(1 + (data["valid_ok"] / data["valid_total"]) * 3, 2)
             if data["valid_total"]
             else None
         )

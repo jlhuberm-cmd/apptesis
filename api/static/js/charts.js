@@ -36,7 +36,7 @@ function initRadarChart(elementId, labels, values, maxValue) {
     },
   ];
   const layout = _baseLayout({
-    polar: { radialaxis: { visible: true, range: [0, maxValue || 8] } },
+    polar: { radialaxis: { visible: true, range: [0, maxValue || 4] } },
     showlegend: false,
   });
   Plotly.newPlot(el, data, layout, _baseConfig());
@@ -58,7 +58,7 @@ function initBarChart(elementId, labels, values, colors, maxValue) {
     },
   ];
   const layout = _baseLayout({
-    yaxis: { range: [0, maxValue || 8], title: 'Media' },
+    yaxis: { range: [0, maxValue || 4], title: 'Media' },
     xaxis: { automargin: true },
   });
   Plotly.newPlot(el, data, layout, _baseConfig());

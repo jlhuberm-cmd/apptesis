@@ -2,5 +2,5 @@
 
 Procesan los CSV de ArcGIS Survey123 según el esquema real del usuario
 (empresas/competencias/preguntas/respuestas → encuestas/respuestas_encuesta/
-detalle_respuestas/resultados_competencia) con escala Likert 0–3.
+detalle_respuestas/resultados_competencia) con escala Likert 1–4.
 """

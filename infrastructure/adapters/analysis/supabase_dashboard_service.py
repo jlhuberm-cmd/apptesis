@@ -1,11 +1,11 @@
-"""Servicio de dashboard sobre datos reales (escala Likert 0–3).
+"""Servicio de dashboard sobre datos reales (escala Likert 1–4).
 
 Lee la vista `v_dashboard_resultados` (una fila por encuestado × competencia con
 score_autoevaluacion, score_conocimiento, nivel, género y rango de edad) y construye
 los datos del tablero reutilizando los DTOs de análisis y el servicio de estadística
 puro del dominio.
 
-Métrica principal del tablero: `score_autoevaluacion` (0–3). Se muestra también la
+Métrica principal del tablero: `score_autoevaluacion` (1–4). Se muestra también la
 media de `score_conocimiento` en las tarjetas.
 """
 from __future__ import annotations
@@ -28,7 +28,7 @@ from infrastructure.adapters.ingestion.digcomp_scoring import nivel_for_score
 logger = logging.getLogger(__name__)
 
 _VIEW = "v_dashboard_resultados"
-MAX_SCORE = 3.0
+MAX_SCORE = 4.0
 _NIVELES = ["Básico", "Intermedio", "Avanzado", "Experto"]
 _NIVEL_COLOR = {
     "Básico": "danger",

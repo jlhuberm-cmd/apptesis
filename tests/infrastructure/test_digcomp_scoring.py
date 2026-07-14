@@ -1,4 +1,4 @@
-"""Tests del motor de cálculo DigComp 2.2 (Likert 0-3) — funciones puras."""
+"""Tests del motor de cálculo DigComp 2.2 (Likert 1-4) — funciones puras."""
 from infrastructure.adapters.ingestion.digcomp_scoring import (
     Pregunta,
     is_correct,
@@ -9,12 +9,12 @@ from infrastructure.adapters.ingestion.digcomp_scoring import (
 
 
 def test_likert_value():
-    assert likert_value("No sé cómo hacerlo") == 0
-    assert likert_value("Puedo hacerlo con ayuda") == 1
-    assert likert_value("Puedo hacerlo por mi cuenta") == 2
-    assert likert_value("Puedo hacerlo y ayudo a otros") == 3
+    assert likert_value("No sé cómo hacerlo") == 1
+    assert likert_value("Puedo hacerlo con ayuda") == 2
+    assert likert_value("Puedo hacerlo por mi cuenta") == 3
+    assert likert_value("Puedo hacerlo y ayudo a otros") == 4
     # tolerante a mayúsculas/acentos/espacios
-    assert likert_value("  no se como hacerlo ") == 0
+    assert likert_value("  no se como hacerlo ") == 1
     assert likert_value("") is None
     assert likert_value("respuesta rara") is None
 
@@ -28,14 +28,14 @@ def test_is_correct():
 
 
 def test_nivel_for_score():
-    assert nivel_for_score(0.4) == "Básico"
-    assert nivel_for_score(0.99) == "Básico"
-    assert nivel_for_score(1.0) == "Intermedio"
-    assert nivel_for_score(1.8) == "Intermedio"
-    assert nivel_for_score(2.0) == "Avanzado"
-    assert nivel_for_score(2.74) == "Avanzado"
-    assert nivel_for_score(2.75) == "Experto"
-    assert nivel_for_score(3.0) == "Experto"
+    assert nivel_for_score(1.4) == "Básico"
+    assert nivel_for_score(1.99) == "Básico"
+    assert nivel_for_score(2.0) == "Intermedio"
+    assert nivel_for_score(2.8) == "Intermedio"
+    assert nivel_for_score(3.0) == "Avanzado"
+    assert nivel_for_score(3.74) == "Avanzado"
+    assert nivel_for_score(3.75) == "Experto"
+    assert nivel_for_score(4.0) == "Experto"
     assert nivel_for_score(None) is None
 
 
@@ -50,13 +50,13 @@ def _catalogo():
 
 
 def test_score_row_reproduce_caso_real():
-    # Caso ObjectID=3, competencia 4.1: Likert 0,3,0,3,3 -> media 1.8 ; validación 2/2 -> 3.0
+    # Competencia 4.1: Likert 1,4,1,4,4 -> media 2.8 ; validación 2/2 -> 1 + 1*3 = 4.0
     row = {
-        "likert_1": "No sé cómo hacerlo",        # 0
-        "likert_2": "Puedo hacerlo y ayudo a otros",  # 3
-        "likert_3": "No sé cómo hacerlo",        # 0
-        "likert_4": "Puedo hacerlo y ayudo a otros",  # 3
-        "likert_5": "Puedo hacerlo y ayudo a otros",  # 3
+        "likert_1": "No sé cómo hacerlo",        # 1
+        "likert_2": "Puedo hacerlo y ayudo a otros",  # 4
+        "likert_3": "No sé cómo hacerlo",        # 1
+        "likert_4": "Puedo hacerlo y ayudo a otros",  # 4
+        "likert_5": "Puedo hacerlo y ayudo a otros",  # 4
         "valid_1": "c. Reporto el problema al área",
         "valid_2": "c. Negarme y sugerirle que use la suya",
     }
@@ -65,17 +65,17 @@ def test_score_row_reproduce_caso_real():
     assert len(resultados) == 1
     r = resultados[0]
     assert r.codigo_competencia == "4.1"
-    assert r.score_autoevaluacion == 1.8
-    assert r.score_conocimiento == 3.0
+    assert r.score_autoevaluacion == 2.8
+    assert r.score_conocimiento == 4.0
     assert r.nivel == "Intermedio"
 
 
 def test_score_row_conocimiento_parcial():
-    row = {f"likert_{i}": "Puedo hacerlo por mi cuenta" for i in range(1, 6)}  # todos 2 -> 2.0
+    row = {f"likert_{i}": "Puedo hacerlo por mi cuenta" for i in range(1, 6)}  # todos 3 -> 3.0
     row["valid_1"] = "c. correcta"
     row["valid_2"] = "a. incorrecta"
     _detalle, resultados = score_row(row, _catalogo())
     r = resultados[0]
-    assert r.score_autoevaluacion == 2.0
-    assert r.score_conocimiento == 1.5  # 1/2 * 3
+    assert r.score_autoevaluacion == 3.0
+    assert r.score_conocimiento == 2.5  # 1 + 1/2 * 3
     assert r.nivel == "Avanzado"

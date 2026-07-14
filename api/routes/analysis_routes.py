@@ -1,6 +1,6 @@
 """Rutas de análisis y endpoint HTMX para filtros y gráficos dinámicos.
 
-Leen los datos REALES (esquema Likert 0–3) desde SupabaseDashboardService. El
+Leen los datos REALES (esquema Likert 1–4) desde SupabaseDashboardService. El
 endpoint `/analysis/data` recalcula y devuelve el partial `dashboard_content` para
 que HTMX lo intercambie, actualizando todo el tablero al aplicar filtros.
 """

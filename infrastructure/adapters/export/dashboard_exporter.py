@@ -109,11 +109,11 @@ def to_excel(context: dict, images: dict[str, bytes] | None = None) -> bytes:
 
     stats = context.get("stats")
     overall = getattr(stats, "overall_mean", 0.0) if stats else 0.0
-    ws["A6"] = f"Media global (autoevaluacion, escala 0-3): {overall}"
+    ws["A6"] = f"Media global (autoevaluacion, escala 1-4): {overall}"
     ws["A6"].font = Font(bold=True, color=_UTPL_NARANJA, size=11)
 
-    encabezados = ["Codigo", "Competencia", "Media Autoeval. (0-3)",
-                   "Media Conocimiento (0-3)", "Nivel"]
+    encabezados = ["Codigo", "Competencia", "Media Autoeval. (1-4)",
+                   "Media Conocimiento (1-4)", "Nivel"]
     hrow = 8
     for col, txt in enumerate(encabezados, start=1):
         ws.cell(row=hrow, column=col, value=txt)
@@ -134,7 +134,7 @@ def to_excel(context: dict, images: dict[str, bytes] | None = None) -> bytes:
 
     # --- Hoja 2: Estadistica descriptiva ---
     ws2 = wb.create_sheet("Estadistica")
-    ws2["A1"] = "Estadistica descriptiva por competencia (autoevaluacion 0-3)"
+    ws2["A1"] = "Estadistica descriptiva por competencia (autoevaluacion 1-4)"
     ws2["A1"].font = title_font
     cols = ["Codigo", "Competencia", "Media", "Mediana", "Moda", "Desv. Est.",
             "Varianza", "Asimetria", "Curtosis", "Min", "Max", "N",
@@ -248,7 +248,7 @@ def to_pdf(context: dict, images: dict[str, bytes] | None = None) -> bytes:
     elementos.append(Paragraph(f"Muestra: {context.get('sample_size', 0)} encuestados", h_sub))
     elementos.append(Spacer(1, 6))
     elementos.append(Paragraph(
-        f"Media global (autoevaluacion, escala 0-3): {overall}", h_metric))
+        f"Media global (autoevaluacion, escala 1-4): {overall}", h_metric))
 
     def _tabla(data, col_widths=None, header_bg=azul):
         t = Table(data, colWidths=col_widths, repeatRows=1)
@@ -277,7 +277,7 @@ def to_pdf(context: dict, images: dict[str, bytes] | None = None) -> bytes:
     elementos.append(_tabla(resumen, col_widths=[2.2 * cm, 10 * cm, 3.5 * cm, 3.5 * cm, 3 * cm]))
 
     # --- Estadistica descriptiva ---
-    elementos.append(Paragraph("Estadistica descriptiva (autoevaluacion 0-3)", h_section))
+    elementos.append(Paragraph("Estadistica descriptiva (autoevaluacion 1-4)", h_section))
     enc = ["Cod.", "Media", "Mediana", "Moda", "Desv.", "Var.", "Asim.",
            "Curt.", "Min", "Max", "N", "P25", "P50", "P75"]
     cuerpo = [enc]
