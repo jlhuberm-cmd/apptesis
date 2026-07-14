@@ -5,12 +5,12 @@
   <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-{{ card.color }}">
     <p class="text-xs text-gray-500">{{ card.code }}</p>
     <p class="text-xs text-gray-600 leading-tight h-8 overflow-hidden">{{ card.name }}</p>
-    <p class="text-2xl font-bold text-{{ card.color }} mt-1">{{ "%.2f"|format(card.mean) }}<span class="text-xs font-normal text-gray-400"> / 3</span></p>
+    <p class="text-2xl font-bold text-{{ card.color }} mt-1">{{ "%.2f"|format(card.mean) }}<span class="text-xs font-normal text-gray-400"> / {{ max_score|default(4)|int }}</span></p>
     <span class="inline-block text-[11px] mt-1 px-2 py-0.5 rounded-full bg-{{ card.color }}/10 text-{{ card.color }}">
       {{ card.category }}
     </span>
     {% if card.conoc is defined %}
-    <p class="text-[11px] text-gray-500 mt-1.5">Conocimiento: <span class="font-medium">{{ "%.2f"|format(card.conoc) }}</span> / 3</p>
+    <p class="text-[11px] text-gray-500 mt-1.5">Conocimiento: <span class="font-medium">{{ "%.2f"|format(card.conoc) }}</span> / {{ max_score|default(4)|int }}</p>
     {% endif %}
   </div>
   {% endfor %}
