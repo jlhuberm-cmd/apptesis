@@ -1,7 +1,7 @@
 """ArcGISCSVProcessor: parsea CSV de ArcGIS Survey123 a entidades SurveyResponse.
 
 Lee el CSV con pandas y mapea sus columnas (configurables) a los campos de la
-entidad SurveyResponse. Valida cada fila (puntajes en rango 1.0–8.0, campos de
+entidad SurveyResponse. Valida cada fila (puntajes en rango 1.0–4.0, campos de
 puntaje presentes) y conserva la fila original en `raw_data` para trazabilidad.
 
 Contrato (esperado por UploadCSVUseCase, Paso 6):

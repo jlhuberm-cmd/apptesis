@@ -1,4 +1,4 @@
-"""Entidad Competency y enum CompetencyLevel (niveles 1–8 de DigComp 2.2).
+"""Entidad Competency y enum CompetencyLevel (niveles de dominio del estudio).
 Incluye las 4 competencias predefinidas del Área 4 (Seguridad).
 
 Núcleo del dominio: sin dependencias externas.
@@ -10,16 +10,12 @@ from enum import IntEnum
 
 
 class CompetencyLevel(IntEnum):
-    """Niveles de competencia del marco DigComp 2.2 (1 a 8)."""
+    """Niveles de dominio usados en el estudio, del más bajo al más alto."""
 
-    FOUNDATION_1 = 1
-    FOUNDATION_2 = 2
-    INTERMEDIATE_3 = 3
-    INTERMEDIATE_4 = 4
-    ADVANCED_5 = 5
-    ADVANCED_6 = 6
-    HIGHLY_SPECIALISED_7 = 7
-    HIGHLY_SPECIALISED_8 = 8
+    BASICO = 1
+    INTERMEDIO = 2
+    AVANZADO = 3
+    EXPERTO = 4
 
 
 @dataclass(frozen=True)

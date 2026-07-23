@@ -26,8 +26,6 @@
             <div class="text-xs text-blue-100">{{ current_user_role }}</div>
           </div>
           <a href="/logout" class="bg-secondary hover:bg-orange-600 transition px-4 py-2 rounded-lg text-sm font-medium">Cerrar sesión</a>
-        {% else %}
-          <a href="/login" class="bg-secondary hover:bg-orange-600 transition px-4 py-2 rounded-lg text-sm font-medium">Iniciar sesión</a>
         {% endif %}
       </div>
 
@@ -52,8 +50,6 @@
       <a href="/admin/usuarios" class="block py-1 text-sm">Usuarios</a>
       {% endif %}
       <a href="/logout" class="block bg-secondary px-4 py-2 rounded-lg text-sm text-center">Cerrar sesión</a>
-    {% else %}
-      <a href="/login" class="block bg-secondary px-4 py-2 rounded-lg text-sm text-center">Iniciar sesión</a>
     {% endif %}
   </div>
 </nav>

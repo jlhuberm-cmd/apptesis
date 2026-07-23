@@ -16,22 +16,22 @@ def _csv(*rows: str) -> bytes:
 def test_csv_valido():
     proc = ArcGISCSVProcessor()
     data = _csv(
-        "26-35,Femenino,Loja,Superior,Urbano,8,6,4,2",
+        "26-35,Femenino,Loja,Superior,Urbano,4,3,2,1",
         "18-25,Masculino,Quito,Media,Rural,1,1,1,1",
     )
     valid, errors = proc.process(data, uuid4(), uuid4())
     assert len(valid) == 2
     assert errors == []
     assert valid[0].respondent_gender == "Femenino"
-    assert valid[0].comp_4_1_score == 8.0
+    assert valid[0].comp_4_1_score == 4.0
     assert valid[0].raw_data.get("Género") == "Femenino"
 
 
 def test_csv_con_filas_invalidas():
     proc = ArcGISCSVProcessor()
     data = _csv(
-        "26-35,Femenino,Loja,Superior,Urbano,8,6,4,2",   # válida
-        "30-40,Otro,Cuenca,Superior,Urbano,9,1,1,1",      # score 9 fuera de rango
+        "26-35,Femenino,Loja,Superior,Urbano,4,3,2,1",   # válida
+        "30-40,Otro,Cuenca,Superior,Urbano,5,1,1,1",      # score 5 fuera de rango
         "30-40,Otro,Cuenca,Superior,Urbano,,1,1,1",       # score vacío
     )
     valid, errors = proc.process(data, uuid4(), uuid4())
@@ -42,7 +42,7 @@ def test_csv_con_filas_invalidas():
 def test_csv_uploaded_by_y_batch():
     proc = ArcGISCSVProcessor()
     uploader, batch = uuid4(), uuid4()
-    valid, _ = proc.process(_csv("26-35,Femenino,Loja,Superior,Urbano,5,5,5,5"), uploader, batch)
+    valid, _ = proc.process(_csv("26-35,Femenino,Loja,Superior,Urbano,3,3,3,3"), uploader, batch)
     assert valid[0].uploaded_by == uploader
     assert valid[0].upload_batch_id == batch
 
@@ -70,7 +70,7 @@ def test_mapeo_personalizado():
         "comp_4_1_score": "c1", "comp_4_2_score": "c2",
         "comp_4_3_score": "c3", "comp_4_4_score": "c4",
     })
-    data = b"sexo,edad,c1,c2,c3,c4\nFemenino,26-35,5,5,5,5\n"
+    data = b"sexo,edad,c1,c2,c3,c4\nFemenino,26-35,3,3,3,3\n"
     valid, errors = proc.process(data, uuid4(), uuid4())
     assert len(valid) == 1
-    assert valid[0].comp_4_1_score == 5.0
+    assert valid[0].comp_4_1_score == 3.0

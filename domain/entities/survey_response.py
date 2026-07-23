@@ -2,7 +2,7 @@
 y los puntajes de las competencias 4.1–4.4.
 
 Núcleo del dominio: NO importa pandas ni nada de infraestructura. Encapsula la
-validación de que cada puntaje esté en el rango válido de DigComp (1.0–8.0).
+validación de que cada puntaje esté en el rango válido de DigComp (1.0–4.0).
 """
 from __future__ import annotations
 
@@ -12,9 +12,9 @@ from uuid import UUID, uuid4
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-# Rango válido de puntajes según los niveles de DigComp 2.2.
+# El puntaje va de 1 a 4, la escala de autonomía de DigComp 2.2.
 MIN_SCORE: float = 1.0
-MAX_SCORE: float = 8.0
+MAX_SCORE: float = 4.0
 
 
 def _utcnow() -> datetime:
@@ -34,10 +34,10 @@ class SurveyResponse(BaseModel):
         respondent_province: Provincia del encuestado.
         respondent_education_level: Nivel educativo del encuestado.
         respondent_sector: Sector (p. ej. urbano/rural, público/privado).
-        comp_4_1_score: Puntaje en la competencia 4.1 (1.0–8.0).
-        comp_4_2_score: Puntaje en la competencia 4.2 (1.0–8.0).
-        comp_4_3_score: Puntaje en la competencia 4.3 (1.0–8.0).
-        comp_4_4_score: Puntaje en la competencia 4.4 (1.0–8.0).
+        comp_4_1_score: Puntaje en la competencia 4.1 (1.0–4.0).
+        comp_4_2_score: Puntaje en la competencia 4.2 (1.0–4.0).
+        comp_4_3_score: Puntaje en la competencia 4.3 (1.0–4.0).
+        comp_4_4_score: Puntaje en la competencia 4.4 (1.0–4.0).
         raw_data: Fila original completa del CSV (para trazabilidad).
         created_at: Fecha de creación del registro.
     """
@@ -70,7 +70,7 @@ class SurveyResponse(BaseModel):
     )
     @classmethod
     def _validate_score_range(cls, value: float) -> float:
-        """Valida que el puntaje esté dentro del rango DigComp [1.0, 8.0]."""
+        """Valida que el puntaje esté dentro del rango DigComp [1.0, 4.0]."""
         if not (MIN_SCORE <= value <= MAX_SCORE):
             raise ValueError(
                 f"El puntaje {value} está fuera del rango válido "

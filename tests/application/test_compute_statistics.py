@@ -44,8 +44,8 @@ def _make_repo(n, gender_alt=True):
         rows.append(SurveyResponse(
             uploaded_by=uuid4(), upload_batch_id=batch,
             respondent_gender=("Femenino" if i % 2 == 0 else "Masculino") if gender_alt else "Femenino",
-            comp_4_1_score=float((i % 8) + 1), comp_4_2_score=5.0,
-            comp_4_3_score=3.0, comp_4_4_score=7.0,
+            comp_4_1_score=float((i % 4) + 1), comp_4_2_score=2.0,
+            comp_4_3_score=3.0, comp_4_4_score=4.0,
         ))
     repo.save_batch(rows)
     return repo
@@ -57,7 +57,7 @@ def test_estadisticas_4_competencias():
     assert len(result.competencies) == 4
     assert result.sample_size == 10
     c42 = next(c for c in result.competencies if c.competency_code == "4.2")
-    assert c42.mean == pytest.approx(5.0)
+    assert c42.mean == pytest.approx(2.0)
     assert c42.variance == pytest.approx(0.0)
     assert c42.competency_name == "Protección de datos personales y privacidad"
 
@@ -66,7 +66,7 @@ def test_overall_mean_es_promedio_de_medias():
     uc = ComputeStatisticsUseCase(_make_repo(10))
     result = uc.execute()
     c41 = next(c for c in result.competencies if c.competency_code == "4.1")
-    esperado = round((c41.mean + 5.0 + 3.0 + 7.0) / 4, 4)
+    esperado = round((c41.mean + 2.0 + 3.0 + 4.0) / 4, 4)
     assert result.overall_mean == pytest.approx(esperado)
 
 

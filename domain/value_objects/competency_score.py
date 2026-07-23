@@ -1,36 +1,39 @@
-"""Value object CompetencyScore: puntaje 1.0–8.0 con nivel y categoría DigComp.
+"""Puntaje de una competencia en la escala DigComp 2.2 (de 1 a 4).
 
-Inmutable. Encapsula la validación de rango y la traducción de un puntaje a su
-nivel y categoría según el marco DigComp 2.2.
+Es un objeto de valor inmutable: guarda el puntaje, comprueba que caiga dentro
+del rango permitido y sabe traducirlo al nivel de dominio que le corresponde.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass
 
 MIN_SCORE: float = 1.0
-MAX_SCORE: float = 8.0
+MAX_SCORE: float = 4.0
 
-# Categoría DigComp por nivel (1–8).
-_CATEGORY_BY_LEVEL: dict[int, str] = {
-    1: "Básico",
-    2: "Básico",
-    3: "Intermedio",
-    4: "Intermedio",
-    5: "Avanzado",
-    6: "Avanzado",
-    7: "Altamente especializado",
-    8: "Altamente especializado",
+# Cortes de nivel. Son los mismos que aplica el motor de cálculo real
+# (digcomp_scoring): por debajo de 2 es Básico, hasta 3 Intermedio, hasta 3.75
+# Avanzado y de ahí en adelante Experto.
+_BASICO_HASTA: float = 2.0
+_INTERMEDIO_HASTA: float = 3.0
+_AVANZADO_HASTA: float = 3.75
+
+# Número de orden de cada nivel (1 el más bajo, 4 el más alto).
+_ORDEN_NIVEL: dict[str, int] = {
+    "Básico": 1,
+    "Intermedio": 2,
+    "Avanzado": 3,
+    "Experto": 4,
 }
 
 
 @dataclass(frozen=True)
 class CompetencyScore:
-    """Puntaje de competencia en la escala DigComp 2.2 (1.0–8.0).
+    """Puntaje de una competencia, entre 1.0 y 4.0.
 
-    Lanza ValueError si el valor está fuera del rango [1.0, 8.0].
+    Si el valor se sale de ese rango, lanza ValueError.
 
     Atributos:
-        value: Puntaje en el rango [1.0, 8.0].
+        value: Puntaje en el rango [1.0, 4.0].
     """
 
     value: float
@@ -46,25 +49,28 @@ class CompetencyScore:
             )
         object.__setattr__(self, "value", value)
 
+    def get_level_category(self) -> str:
+        """Devuelve el nivel del puntaje: Básico, Intermedio, Avanzado o Experto."""
+        if self.value < _BASICO_HASTA:
+            return "Básico"
+        if self.value < _INTERMEDIO_HASTA:
+            return "Intermedio"
+        if self.value < _AVANZADO_HASTA:
+            return "Avanzado"
+        return "Experto"
+
     @property
     def level(self) -> int:
-        """Nivel entero (1–8) correspondiente al puntaje (redondeo al más cercano)."""
-        return min(8, max(1, round(self.value)))
-
-    def get_level_category(self) -> str:
-        """Devuelve la categoría DigComp del puntaje.
-
-        ("Básico", "Intermedio", "Avanzado" o "Altamente especializado").
-        """
-        return _CATEGORY_BY_LEVEL[self.level]
+        """Número de orden del nivel: 1 (Básico) a 4 (Experto)."""
+        return _ORDEN_NIVEL[self.get_level_category()]
 
     def get_level_name(self) -> str:
-        """Devuelve el nombre completo del nivel (categoría + número), p. ej. 'Intermedio 3'."""
+        """Nombre del nivel con su número, por ejemplo 'Avanzado 3'."""
         return f"{self.get_level_category()} {self.level}"
 
     @staticmethod
     def is_valid(value: float) -> bool:
-        """Indica si un valor está dentro del rango válido sin construir el VO."""
+        """Comprueba si un valor cae en el rango válido sin llegar a crear el objeto."""
         try:
             return MIN_SCORE <= float(value) <= MAX_SCORE
         except (TypeError, ValueError):

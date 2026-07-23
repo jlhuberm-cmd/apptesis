@@ -56,7 +56,7 @@ class RadarData(BaseModel):
 
     labels: list[str]
     values: list[float]
-    max_value: float = 8.0
+    max_value: float = 4.0
 
 
 class BarChartData(BaseModel):

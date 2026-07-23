@@ -12,12 +12,12 @@ class AnalysisError(DomainError):
 
 
 class InvalidScoreRangeError(AnalysisError):
-    """Un puntaje está fuera del rango válido [1.0, 8.0]."""
+    """Un puntaje está fuera del rango válido [1.0, 4.0]."""
 
     def __init__(self, score: float) -> None:
         self.score = score
         super().__init__(
-            f"El puntaje {score} está fuera del rango válido [1.0, 8.0]."
+            f"El puntaje {score} está fuera del rango válido [1.0, 4.0]."
         )
 
 

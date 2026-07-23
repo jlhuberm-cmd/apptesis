@@ -50,18 +50,18 @@ class TestPassword:
 class TestCompetencyScore:
     def test_niveles(self):
         assert CompetencyScore(1).get_level_category() == "Básico"
-        assert CompetencyScore(3).get_level_category() == "Intermedio"
-        assert CompetencyScore(6).get_level_category() == "Avanzado"
-        assert CompetencyScore(8).get_level_category() == "Altamente especializado"
-        assert CompetencyScore(3).get_level_name() == "Intermedio 3"
+        assert CompetencyScore(2.5).get_level_category() == "Intermedio"
+        assert CompetencyScore(3).get_level_category() == "Avanzado"
+        assert CompetencyScore(4).get_level_category() == "Experto"
+        assert CompetencyScore(3).get_level_name() == "Avanzado 3"
 
-    @pytest.mark.parametrize("bad", [0.5, 8.5, -1, 100])
+    @pytest.mark.parametrize("bad", [0.5, 4.5, -1, 100])
     def test_fuera_de_rango(self, bad):
         with pytest.raises(ValueError):
             CompetencyScore(bad)
 
-    def test_redondeo_y_igualdad(self):
-        assert CompetencyScore(5.5).level == 6
+    def test_nivel_y_igualdad(self):
+        assert CompetencyScore(2.4).level == 2
         assert CompetencyScore(4) == CompetencyScore(4.0)
 
 

@@ -52,7 +52,7 @@ def test_percentiles_interpolacion_lineal():
 
 
 def test_min_max():
-    assert st.calculate_min_max([3, 1, 8, 5]) == (1.0, 8.0)
+    assert st.calculate_min_max([3, 1, 4, 2]) == (1.0, 4.0)
     assert st.calculate_min_max([]) == (0.0, 0.0)
 
 

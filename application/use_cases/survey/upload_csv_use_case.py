@@ -55,7 +55,7 @@ class UploadCSVUseCase:
             if all(is_valid_score(s) for s in scores):
                 valid_responses.append(response)
             else:
-                errors.append(f"Fila {index}: puntaje fuera del rango [1.0, 8.0].")
+                errors.append(f"Fila {index}: puntaje fuera del rango [1.0, 4.0].")
 
         saved = (
             self._survey_repo.save_batch(valid_responses) if valid_responses else 0
